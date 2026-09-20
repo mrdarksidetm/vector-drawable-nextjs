@@ -4,10 +4,29 @@ import { transform, parseAndroidResource } from 'vector-drawable-svg';
 import SVG from 'react-inlinesvg';
 import { useFilePicker } from 'react-sage';
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import GitHubButton from 'react-github-btn';
-import CodeMirror from '@uiw/react-codemirror';
 import { xml } from '@codemirror/lang-xml';
+import { EditorView } from '@codemirror/view';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
+
+const CodeMirror = dynamic(() => import('@uiw/react-codemirror'), {
+	ssr: false,
+	loading: () => (
+		<div style={{
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+			height: '100%',
+			minHeight: '380px',
+			color: 'var(--vd-color-secondary-text)',
+			fontFamily: '"JetBrains Mono", monospace',
+			fontSize: '13px'
+		}}>
+			Loading Code Editor...
+		</div>
+	),
+});
 
 const STATE_NONE = -1;
 const STATE_DRAG_LEAVE = 0;
@@ -120,6 +139,15 @@ export default function Home() {
 	const [bgMode, setBgMode] = useState('dark'); // 'dark' | 'checkerboard' | 'light'
 	const [copiedSvg, setCopiedSvg] = useState(false);
 	const [copiedXml, setCopiedXml] = useState(false);
+	const [wordWrap, setWordWrap] = useState(true);
+
+	const editorExtensions = useMemo(() => {
+		const exts = [xml()];
+		if (wordWrap) {
+			exts.push(EditorView.lineWrapping);
+		}
+		return exts;
+	}, [wordWrap]);
 
 	const override = useMemo(() => {
 		try {
@@ -271,9 +299,11 @@ export default function Home() {
 			<Head>
 				<title>VectorDrawable to SVG — Live Preview & Code Editor</title>
 				<meta name="description" content="Directly paste or drop Android VectorDrawable XML and preview SVG in real-time." />
+				<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
 			</Head>
 
-			<div className="vd-form-center" style={{ width: '100%' }}>
+			<main className="container">
+				<div className="vd-form-center" style={{ width: '100%' }}>
 				<HiddenFileInput accept=".xml" multiple={false} />
 
 				{/* Header Section */}
@@ -321,6 +351,14 @@ export default function Home() {
 							</div>
 
 							<div className="vd-toolbar">
+								<button
+									type="button"
+									className={`vd-btn-ghost ${wordWrap ? 'vd-btn-active' : ''}`}
+									onClick={() => setWordWrap(!wordWrap)}
+									title={wordWrap ? "Word wrap is ON (always adapts to screen)" : "Word wrap is OFF"}
+								>
+									Wrap: {wordWrap ? "ON" : "OFF"}
+								</button>
 								<button type="button" className="vd-btn-ghost" onClick={loadSample} title="Load sample vector drawable">
 									Sample
 								</button>
@@ -341,7 +379,7 @@ export default function Home() {
 							<CodeMirror
 								value={xmlContent}
 								onChange={setXmlContent}
-								extensions={[xml()]}
+								extensions={editorExtensions}
 								theme={vscodeDark}
 								basicSetup={{
 									lineNumbers: true,
@@ -362,7 +400,7 @@ export default function Home() {
 									value={xmlResource}
 									onChange={setXmlResource}
 									style={{ fontSize: "13px" }}
-									extensions={[xml()]}
+									extensions={editorExtensions}
 									theme={vscodeDark}
 								/>
 								<p style={{ marginTop: '8px', fontSize: '0.78em', color: 'var(--vd-color-secondary-text)' }}>
@@ -418,7 +456,7 @@ export default function Home() {
 										<ReactSVG src={getAssetUrl("close.svg")} />
 									</div>
 									<div className="vd-image">
-										<SVG src={transformedSvg} width={320} height={320} title="Rendered SVG" />
+										<SVG src={transformedSvg} width="100%" height="100%" title="Rendered SVG" />
 									</div>
 								</div>
 							) : (
@@ -475,6 +513,7 @@ export default function Home() {
 					</p>
 				</footer>
 			</div>
+			</main>
 		</>
 	);
 }

@@ -14,10 +14,22 @@ html,
 body {
 	padding: 0;
 	margin: 0;
+	width: 100%;
+	min-height: 100vh;
 	font-family: "DM Sans", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 		Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 	background-color: var(--vd-color-surface);
 	color: var(--vd-color-text);
+	overflow-x: hidden;
+}
+
+#__next {
+	width: 100%;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow-x: hidden;
 }
 
 a {
@@ -39,8 +51,10 @@ p {
 	margin: 0 auto;
 	padding: 0 20px;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
+	box-sizing: border-box;
 }
 
 .vd-form-center {
@@ -48,13 +62,17 @@ p {
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
+	width: 100%;
+	max-width: 100%;
 }
 
 .vd-title {
 	padding: 0;
 	margin: 0;
-	font-size: 3em;
+	font-size: clamp(1.85rem, 5vw, 3rem);
 	text-align: center;
+	line-height: 1.15;
+	word-break: break-word;
 }
 
 .vd-subtitle {
@@ -62,7 +80,9 @@ p {
 	margin: 10px 0;
 	color: var(--vd-color-secondary-text);
 	text-align: center;
-	font-size: 1.2em;
+	font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+	max-width: 640px;
+	line-height: 1.4;
 }
 
 .vd-head {
@@ -168,9 +188,9 @@ button {
 	background: var(--vd-color-primary);
 	font-size: 1.2em;
 	border: none;
-	min-width: 400px;
+	max-width: 100%;
 	border-radius: calc(var(--vd-size-corner-radius) / 1.5);
-	padding: 14px 0;
+	padding: 14px 20px;
 	outline: none;
 	transition: 0.23s ease;
 	display: flex;
@@ -256,35 +276,30 @@ button:not(:disabled):active {
 
 @media only screen and (max-width: 600px) {
 	.vd-code-snippet {
-		max-width: 350px;
-	}
-
-	.vd-title {
-		font-size: 1.8em;
-	}
-
-	.vd-subtitle {
-		font-size: 1em;
+		max-width: 100%;
+		font-size: 0.85em;
 	}
 
 	.vd-dropzone {
-		min-width: 300px;
-		min-height: 300px;
+		min-width: unset;
+		width: 100%;
+		min-height: 280px;
 	}
 
 	.vd-dropzone .vd-image-container .vd-filename p {
-		max-width: 300px;
+		max-width: 100%;
 	}
 
 	button {
-		min-width: 300px;
+		min-width: unset;
+		width: 100%;
 	}
 }
 
 /* Side-by-Side Dual-Pane Workspace */
 .vd-workspace {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 	gap: 24px;
 	width: 100%;
 	max-width: 1180px;
@@ -300,6 +315,9 @@ button:not(:disabled):active {
 	display: flex;
 	flex-direction: column;
 	position: relative;
+	min-width: 0;
+	max-width: 100%;
+	width: 100%;
 	transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -376,6 +394,12 @@ button:not(:disabled):active {
 	background: rgba(38, 155, 255, 0.2);
 }
 
+.vd-btn-ghost.vd-btn-active {
+	background: rgba(38, 155, 255, 0.2);
+	color: #fff;
+	border-color: var(--vd-color-primary);
+}
+
 .vd-editor-wrapper {
 	flex-grow: 1;
 	border-radius: 14px;
@@ -386,12 +410,17 @@ button:not(:disabled):active {
 	max-height: 460px;
 	display: flex;
 	flex-direction: column;
+	min-width: 0;
+	max-width: 100%;
+	width: 100%;
 }
 
 .vd-editor-wrapper .cm-editor {
 	height: 100%;
 	min-height: 400px;
 	max-height: 460px;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .vd-editor-wrapper .cm-scroller {
@@ -399,6 +428,21 @@ button:not(:disabled):active {
 	font-family: "JetBrains Mono", monospace;
 	font-size: 13px;
 	line-height: 1.5;
+	min-width: 0;
+	max-width: 100%;
+}
+
+/* Word-wrapping support for CodeMirror */
+.vd-editor-wrapper .cm-content {
+	min-width: 0;
+	max-width: 100%;
+	word-break: break-all;
+	overflow-wrap: anywhere;
+}
+
+.vd-editor-wrapper .cm-line {
+	word-break: break-all;
+	overflow-wrap: anywhere;
 }
 
 .vd-resource-accordion {
@@ -438,6 +482,9 @@ button:not(:disabled):active {
 	flex-grow: 1;
 	min-height: 400px;
 	max-height: 460px;
+	min-width: 0;
+	max-width: 100%;
+	width: 100%;
 	border-radius: 14px;
 	border: 2px dashed var(--vd-color-stroke);
 	background: var(--vd-color-on-surface);
@@ -495,10 +542,10 @@ button:not(:disabled):active {
 }
 
 .vd-preview-content .vd-image svg {
-	max-width: 320px;
+	max-width: 100%;
 	max-height: 320px;
-	width: 100%;
-	height: 100%;
+	width: auto;
+	height: auto;
 	object-fit: contain;
 }
 
@@ -651,5 +698,68 @@ button:not(:disabled):active {
 
 	.vd-head {
 		margin-top: 30px;
+	}
+
+	.vd-pane {
+		padding: 16px;
+	}
+
+	.vd-editor-wrapper,
+	.vd-editor-wrapper .cm-editor,
+	.vd-preview-box {
+		min-height: 340px;
+		max-height: 440px;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.container {
+		padding: 0 12px;
+	}
+
+	.vd-head {
+		margin-top: 20px;
+	}
+
+	.vd-pane {
+		padding: 12px;
+		border-radius: 16px;
+	}
+
+	.vd-panel-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+	}
+
+	.vd-toolbar {
+		width: 100%;
+		flex-wrap: wrap;
+		gap: 5px;
+	}
+
+	.vd-btn-ghost {
+		flex: 1 1 auto;
+		text-align: center;
+		justify-content: center;
+		padding: 6px 8px;
+		font-size: 0.75em;
+	}
+
+	.vd-action-row {
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.vd-editor-wrapper,
+	.vd-editor-wrapper .cm-editor,
+	.vd-preview-box {
+		min-height: 260px;
+		max-height: 340px;
+	}
+
+	.vd-credits-bar {
+		font-size: 0.8em;
+		gap: 6px;
 	}
 }
