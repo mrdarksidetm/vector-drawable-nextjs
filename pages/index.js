@@ -139,7 +139,9 @@ export default function Home() {
 	const [bgMode, setBgMode] = useState('dark'); // 'dark' | 'checkerboard' | 'light'
 	const [copiedSvg, setCopiedSvg] = useState(false);
 	const [copiedXml, setCopiedXml] = useState(false);
+	const [copiedCli, setCopiedCli] = useState(false);
 	const [wordWrap, setWordWrap] = useState(true);
+	const [activeTab, setActiveTab] = useState('editor'); // 'editor' | 'preview'
 
 	const editorExtensions = useMemo(() => {
 		const exts = [xml()];
@@ -187,6 +189,7 @@ export default function Home() {
 			setXmlContent(content);
 			setVectorDrawableFile(file);
 			setDragState(STATE_DROP);
+			setActiveTab('preview');
 
 			const placeholder = createOverridePlaceholder(content);
 			if (placeholder && Object.keys(override).length === 0) {
@@ -286,6 +289,16 @@ export default function Home() {
 		}
 	};
 
+	const copyCliCommand = async () => {
+		try {
+			await navigator.clipboard.writeText('npx vector-drawable-svg my-drawable.xml out.svg');
+			setCopiedCli(true);
+			setTimeout(() => setCopiedCli(false), 2000);
+		} catch (err) {
+			console.error("Failed to copy CLI command: ", err);
+		}
+	};
+
 	const cycleBgMode = () => {
 		if (bgMode === 'dark') setBgMode('checkerboard');
 		else if (bgMode === 'checkerboard') setBgMode('light');
@@ -340,10 +353,35 @@ export default function Home() {
 					</div>
 				</div>
 
+				{/* Mobile Segmented Tab Bar (< 768px) */}
+				<div className="vd-mobile-segmented-control" role="tablist" aria-label="Workspace View">
+					<button
+						type="button"
+						role="tab"
+						aria-selected={activeTab === 'editor'}
+						className={`vd-segment-btn ${activeTab === 'editor' ? 'active' : ''}`}
+						onClick={() => setActiveTab('editor')}
+					>
+						<span className="vd-badge">XML</span>
+						<span>Editor</span>
+					</button>
+					<button
+						type="button"
+						role="tab"
+						aria-selected={activeTab === 'preview'}
+						className={`vd-segment-btn ${activeTab === 'preview' ? 'active' : ''}`}
+						onClick={() => setActiveTab('preview')}
+					>
+						<span className="vd-badge vd-badge-svg">SVG</span>
+						<span>Live Preview</span>
+						{transformedSvg && <span className="vd-indicator-dot" />}
+					</button>
+				</div>
+
 				{/* Dual-Pane Workspace */}
 				<div className="vd-workspace">
 					{/* Left Pane: XML Editor */}
-					<div className="vd-pane">
+					<div className={`vd-pane vd-pane-editor ${activeTab === 'editor' ? 'vd-mobile-active' : ''}`}>
 						<div className="vd-panel-header">
 							<div className="vd-panel-title">
 								<span className="vd-badge">XML</span>
@@ -417,7 +455,7 @@ export default function Home() {
 					</div>
 
 					{/* Right Pane: Live SVG Preview */}
-					<div className="vd-pane">
+					<div className={`vd-pane vd-pane-preview ${activeTab === 'preview' ? 'vd-mobile-active' : ''}`}>
 						<div className="vd-panel-header">
 							<div className="vd-panel-title">
 								<span className="vd-badge vd-badge-svg">SVG</span>
@@ -493,24 +531,52 @@ export default function Home() {
 					</div>
 				</div>
 
-				{/* Footer with CLI & Credits */}
+				{/* Footer with Interactive CLI Card & Credits */}
 				<footer className="vd-footer">
-					<div className="vd-github">
-						<a href="https://github.com/mrdarksidetm/vector-drawable-nextjs" target="_blank" rel="noopener noreferrer" title="View on GitHub">
-							<ReactSVG src={getAssetUrl("github.svg")} />
-						</a>
+					<div className="vd-cli-card">
+						<div className="vd-cli-header">
+							<div className="vd-cli-title-row">
+								<span className="vd-badge">CLI</span>
+								<span className="vd-cli-title">Command-Line Conversion</span>
+							</div>
+							<button
+								type="button"
+								className="vd-btn-ghost vd-cli-copy-btn"
+								onClick={copyCliCommand}
+								title="Copy CLI command"
+							>
+								{copiedCli ? "✓ Copied!" : "Copy"}
+							</button>
+						</div>
+						<div
+							className="vd-code-snippet"
+							onClick={copyCliCommand}
+							title="Click to copy CLI command"
+						>
+							<span className="vd-prompt">$</span>
+							<span>npx</span>
+							<span className="vd-cmd">vector-drawable-svg</span>
+							<span className="vd-input">my-drawable.xml</span>
+							<span className="vd-input">out.svg</span>
+						</div>
 					</div>
 
-					<p style={{ marginTop: '12px', fontSize: '0.9em', color: 'var(--vd-color-secondary-text)' }}>
-						Forked & Enhanced by <a href="https://github.com/mrdarksidetm" style={{ color: 'var(--vd-color-primary)' }} target="_blank" rel="noopener noreferrer">mrdarksidetm</a>
-						{" "}• All core engine & design credits to <a href="https://github.com/seanghay" style={{ color: 'var(--vd-color-primary)' }} target="_blank" rel="noopener noreferrer">seanghay</a>
-					</p>
+					<div className="vd-footer-bottom">
+						<div className="vd-github">
+							<a href="https://github.com/mrdarksidetm/vector-drawable-nextjs" target="_blank" rel="noopener noreferrer" title="View on GitHub">
+								<ReactSVG src={getAssetUrl("github.svg")} />
+							</a>
+						</div>
 
-					<h5 style={{ marginTop: '24px', marginBottom: '8px', color: 'var(--vd-color-text)' }}>Or convert using the CLI</h5>
-
-					<p className="vd-code-snippet">
-						npx <span className="vd-cmd">vector-drawable-svg</span> <span className="vd-input">my-drawable.xml</span> <span className="vd-input">out.svg</span>
-					</p>
+						<div className="vd-credits-pills">
+							<span className="vd-credit-pill">
+								Engine by <a href="https://github.com/seanghay" target="_blank" rel="noopener noreferrer">@seanghay</a>
+							</span>
+							<span className="vd-credit-pill">
+								Enhanced by <a href="https://github.com/mrdarksidetm" target="_blank" rel="noopener noreferrer">@mrdarksidetm</a>
+							</span>
+						</div>
+					</div>
 				</footer>
 			</div>
 			</main>

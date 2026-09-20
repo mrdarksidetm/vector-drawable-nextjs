@@ -96,3 +96,19 @@ Strict Append Pattern: All updates are permanently appended to the bottom.
     - Styled `html, body` and `#__next` with `width: 100%`, `min-height: 100vh`, and `overflow-x: hidden`.
     - Set `.container` to `display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; box-sizing: border-box;` for rock-solid centering across laptop and phone displays.
 - **Verification**: Verified syntax and bracket matching across modified files.
+
+### [2026-09-20 10:38:00 IST] - Adaptive Segmented Mobile View & Interactive CLI Card Footer
+- **Author**: mrdarksidetm
+- **Status**: Completed responsive segmented tab switcher for mobile devices and unified Material 3 card footer with 1-tap clipboard copy.
+- **Files Modified**:
+  - `pages/index.js`:
+    - Introduced `activeTab` state (`'editor' | 'preview'`) and added `.vd-mobile-segmented-control` tab bar that appears exclusively on screens `<= 768px`.
+    - Added auto-switch trigger to activate the preview tab immediately upon file drop or sample load.
+    - Updated left pane with `.vd-pane-editor` and right pane with `.vd-pane-preview`, applying conditional `.vd-mobile-active` class for mobile tab toggling while keeping desktop dual-pane grid active.
+    - Added `copyCliCommand` with feedback state and refactored footer to embed an interactive `.vd-cli-card` with 1-tap copy and responsive credit pills.
+  - `styles/globals.css`:
+    - Added CSS rules for `.vd-mobile-segmented-control`, `.vd-segment-btn` (with active blue accent glow and green live SVG indicator dot).
+    - Configured `@media (max-width: 768px)` to hide inactive panes on mobile, while ensuring `@media (min-width: 769px)` preserves full side-by-side dual-pane view on desktops, laptops, and tablets.
+    - Designed Material 3 `.vd-cli-card`, interactive `.vd-code-snippet` with hover effects, and rounded `.vd-credit-pill` tags.
+    - Reduced mobile footer margin-bottom to 32px to eliminate excessive dead scroll.
+- **Verification**: Verified via git status, bracket integrity check, and remote CI/CD deployment pipeline.
