@@ -112,3 +112,14 @@ Strict Append Pattern: All updates are permanently appended to the bottom.
     - Designed Material 3 `.vd-cli-card`, interactive `.vd-code-snippet` with hover effects, and rounded `.vd-credit-pill` tags.
     - Reduced mobile footer margin-bottom to 32px to eliminate excessive dead scroll.
 - **Verification**: Verified via git status, bracket integrity check, and remote CI/CD deployment pipeline.
+
+### [2026-09-20 10:45:00 IST] - GitHub Footer Logo Sizing Normalization
+- **Author**: mrdarksidetm
+- **Status**: Completed GitHub logo dimension constraints and SVG attribute normalization.
+- **Files Modified**:
+  - `public/github.svg`:
+    - Reduced hardcoded default `width="512"` and `height="512"` canvas attributes to idiomatic standard `width="24"` and `height="24"` while preserving `viewBox="0 0 24 24"`.
+  - `styles/globals.css`:
+    - Added dedicated `.vd-github` flex centering wrapper rules.
+    - Added `.vd-github svg` size constraints explicitly locking width and height to `26px` (`max-width: 26px; max-height: 26px; fill: var(--vd-color-secondary-text); transition: fill 0.2s ease, transform 0.2s ease;`) with an elegant hover scale (`scale(1.1)`) and white highlight (`fill: #ffffff`).
+- **Verification**: Verified via git status, diff inspection, and remote CI/CD deployment pipeline.

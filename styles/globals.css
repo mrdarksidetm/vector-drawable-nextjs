@@ -336,6 +336,26 @@ button:not(:disabled):active {
 	width: 100%;
 }
 
+.vd-github {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.vd-github svg {
+	width: 26px;
+	height: 26px;
+	max-width: 26px;
+	max-height: 26px;
+	fill: var(--vd-color-secondary-text);
+	transition: fill 0.2s ease, transform 0.2s ease;
+}
+
+.vd-github svg:hover {
+	fill: #ffffff;
+	transform: scale(1.1);
+}
+
 .vd-credits-pills {
 	display: flex;
 	align-items: center;
