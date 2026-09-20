@@ -123,3 +123,16 @@ Strict Append Pattern: All updates are permanently appended to the bottom.
     - Added dedicated `.vd-github` flex centering wrapper rules.
     - Added `.vd-github svg` size constraints explicitly locking width and height to `26px` (`max-width: 26px; max-height: 26px; fill: var(--vd-color-secondary-text); transition: fill 0.2s ease, transform 0.2s ease;`) with an elegant hover scale (`scale(1.1)`) and white highlight (`fill: #ffffff`).
 - **Verification**: Verified via git status, diff inspection, and remote CI/CD deployment pipeline.
+
+### [2026-09-20 10:53:00 IST] - Comprehensive README.md Documentation Synchronization
+- **Author**: mrdarksidetm
+- **Status**: Completed README.md documentation update reflecting all modern architectural enhancements.
+- **Files Modified**:
+  - `README.md`:
+    - Documented adaptive segmented mobile view (`<= 768px`) with auto-switching tabs and full desktop dual-pane grid preservation.
+    - Documented always-on word wrapping with `Wrap: ON / OFF` toolbar toggle and `minmax(0, 1fr)` layout protection.
+    - Documented SSR-decoupled dynamic CodeMirror architecture and viewport standardization.
+    - Documented interactive Material 3 CLI card footer with 1-tap clipboard copy and normalized GitHub branding.
+    - Added live demo shield badge, deploy workflow status badge, and tech stack tags.
+  - `Version.md`
+- **Verification**: Verified via git status, diff inspection, and remote CI/CD deployment pipeline.
